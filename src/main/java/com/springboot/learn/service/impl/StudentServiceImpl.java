@@ -11,7 +11,7 @@ import com.springboot.learn.repository.StudentRepository;
 import com.springboot.learn.service.StudentService;
 
 @Service
-public abstract class StudentServiceImpl implements StudentService {
+public  class StudentServiceImpl implements StudentService {
 
 	private final StudentRepository studentRepository;
 	private final ModelMapper modelMapper;
@@ -35,7 +35,8 @@ public abstract class StudentServiceImpl implements StudentService {
 	
 	@Override
 	public StudentDto getStudentById(Long id) {
-		Student student= studentRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Student not found"));
+		Student students= studentRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Student not found"));
+		return modelMapper.map(students,StudentDto.class);
 		
 	}
 }
