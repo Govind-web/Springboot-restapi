@@ -5,6 +5,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.springboot.learn.dto.AddStudentRequestDto;
 import com.springboot.learn.dto.StudentDto;
 import com.springboot.learn.entity.Student;
 import com.springboot.learn.repository.StudentRepository;
@@ -38,5 +39,28 @@ public  class StudentServiceImpl implements StudentService {
 		Student students= studentRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Student not found"));
 		return modelMapper.map(students,StudentDto.class);
 		
+	}
+	
+	@Override
+	public StudentDto createNewStudent(AddStudentRequestDto addStudentRequestDto) {
+		Student newStudent=modelMapper.map(addStudentRequestDto, Student.class);
+		Student student=studentRepository.save(newStudent);
+		return modelMapper.map(student,StudentDto.class);
+	}
+	
+	@Override
+	public void deleteStudentById(Long id) {
+		if(!studentRepository.existsById(id)) {
+			throw new IllegalArgumentException("Student does not exist by id"+id);
+		}
+		studentRepository.deleteById(id);
+	}
+	
+	@Override
+	public StudentDto updateStudent(Long id,AddStudentRequestDto addStudentRequestDto) {
+		Student students= studentRepository.findById(id).orElseThrow(()->new IllegalArgumentException("Student not found"+id));
+		 modelMapper.map(addStudentRequestDto, students);
+		students= studentRepository.save(students);
+		return modelMapper.map(students,StudentDto.class);
 	}
 }
